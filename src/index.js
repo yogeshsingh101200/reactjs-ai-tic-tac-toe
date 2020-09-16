@@ -2,6 +2,88 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+
+function actions(squares) {
+    let set = new Set();
+    squares.forEach((square, index) => {
+        if (!square) {
+            set.add(index);
+        }
+    });
+    return set;
+}
+
+
+function player(squares) {
+    let cnt1 = 0;
+    let cnt2 = 0;
+    for (let square of squares) {
+        if (square === 'X') ++cnt1;
+        else if (square === 'O') ++cnt2;
+    }
+    if (cnt1 > cnt2) return 'O';
+    else return 'X';
+}
+
+function result(squares, action) {
+    const updated_squares = squares.slice();
+    updated_squares[action] = player(squares);
+    return updated_squares;
+}
+
+function terminal(squares) {
+    if (calculateWinner(squares)) return true;
+    for (let square of squares) {
+        if (!square) return false;
+    }
+    return true;
+}
+
+function utility(squares) {
+    const W = calculateWinner(squares);
+    let score;
+    if (W === "X") score = 1;
+    else if (W === "O") score = -1;
+    else score = 0;
+    return score;
+}
+
+function maxvalue(squares) {
+    if (terminal(squares)) return utility(squares);
+    let v = -Infinity;
+    for (let action of actions(squares)) {
+        v = Math.max(v, minvalue(result(squares, action)));
+    }
+    return v;
+}
+
+
+function minvalue(squares) {
+    if (terminal(squares)) return utility(squares);
+    let v = Infinity;
+    for (let action of actions(squares)) {
+        v = Math.min(v, maxvalue(result(squares, action)));
+    }
+    return v;
+}
+
+function minimax(squares) {
+    // assuming ai is playing as O
+    // todo: remove assumption
+    let optimal_score = Infinity;
+    let optimal_state = null;
+
+    for (let state of actions(squares)) {
+        let val = maxvalue(result(squares, state));
+        if (val < optimal_score) {
+            optimal_score = val;
+            optimal_state = state;
+        }
+    }
+    return optimal_state;
+}
+
+
 function calculateWinner(squares) {
     const lines = [
         [0, 1, 2],
@@ -27,7 +109,7 @@ function Square(props) {
     return (
         <button className="square" onClick={props.onClick}>
             { props.value}
-        </button >
+        </button>
     );
 }
 
@@ -101,6 +183,24 @@ class Game extends React.Component {
         });
     }
 
+    makeAiMove() {
+        const history = this.state.history.slice(0, this.state.stepNumber + 1);
+        const current = this.state.history[history.length - 1];
+        const squares = current.squares.slice();
+        const move = minimax(squares);
+        if (calculateWinner(squares) || squares[move]) {
+            return;
+        }
+        squares[move] = this.state.xIsNext ? "X" : "O";
+        this.setState({
+            history: history.concat([{
+                squares: squares
+            }]),
+            stepNumber: history.length,
+            xIsNext: !this.state.xIsNext,
+        });
+    }
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
@@ -115,7 +215,7 @@ class Game extends React.Component {
                     <button onClick={() => { this.jumpTo(move); }}>
                         {desc}
                     </button>
-                </li >
+                </li>
             );
         });
 
@@ -126,21 +226,39 @@ class Game extends React.Component {
             status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
         }
 
-
-        return (
-            <div className="game">
-                <div className="game-board">
-                    <Board
-                        squares={current.squares}
-                        onClick={i => { this.handleClick(i); }}
-                    />
+        if (!this.state.xIsNext) {
+            setTimeout(() => {
+                this.makeAiMove();
+            }, 0);
+            return (
+                <div className="game">
+                    <div className="game-board">
+                        <Board
+                            squares={current.squares}
+                        />
+                    </div>
+                    <div className="game-info">
+                        <div>{status}</div>
+                        <ol>{moves}</ol>
+                    </div>
                 </div>
-                <div className="game-info">
-                    <div>{status}</div>
-                    <ol>{moves}</ol>
+            );
+        } else {
+            return (
+                <div className="game">
+                    <div className="game-board">
+                        <Board
+                            squares={current.squares}
+                            onClick={i => { this.handleClick(i); }}
+                        />
+                    </div>
+                    <div className="game-info">
+                        <div>{status}</div>
+                        <ol>{moves}</ol>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }
 
