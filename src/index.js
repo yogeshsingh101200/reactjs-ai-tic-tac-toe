@@ -42,27 +42,37 @@ function terminal(squares) {
 function utility(squares) {
     const W = calculateWinner(squares);
     let score;
-    if (W === "X") score = 1;
-    else if (W === "O") score = -1;
+    if (W === "X") score = 10;
+    else if (W === "O") score = -10;
     else score = 0;
     return score;
 }
 
-function maxvalue(squares) {
-    if (terminal(squares)) return utility(squares);
+function maxvalue(squares, depth) {
+    if (terminal(squares)) {
+        const score = utility(squares);
+        if (score > 0) return score - depth;
+        else if (score < 0) return score + depth;
+        return score;
+    }
     let v = -Infinity;
     for (let action of actions(squares)) {
-        v = Math.max(v, minvalue(result(squares, action)));
+        v = Math.max(v, minvalue(result(squares, action), depth + 1));
     }
     return v;
 }
 
 
-function minvalue(squares) {
-    if (terminal(squares)) return utility(squares);
+function minvalue(squares, depth) {
+    if (terminal(squares)) {
+        const score = utility(squares);
+        if (score > 0) return score - depth;
+        else if (score < 0) return score + depth;
+        return score;
+    }
     let v = Infinity;
     for (let action of actions(squares)) {
-        v = Math.min(v, maxvalue(result(squares, action)));
+        v = Math.min(v, maxvalue(result(squares, action), depth + 1));
     }
     return v;
 }
@@ -74,7 +84,7 @@ function minimax(squares) {
     let optimal_state = null;
 
     for (let state of actions(squares)) {
-        let val = maxvalue(result(squares, state));
+        let val = maxvalue(result(squares, state), 0);
         if (val < optimal_score) {
             optimal_score = val;
             optimal_state = state;
