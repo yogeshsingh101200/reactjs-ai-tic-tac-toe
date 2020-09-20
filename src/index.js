@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function actions(squares) {
@@ -114,11 +115,16 @@ function calculateWinner(squares) {
     return null;
 }
 
+const boardmap = [
+    'top left', 'top', 'top right',
+    'middle left', 'middle', 'middle right',
+    'bottom left', 'bottom', 'bottom right'
+];
 
 function Square(props) {
     return (
-        <button className="square" onClick={props.onClick}>
-            { props.value}
+        <button className={`square ${boardmap[props.location]}`} onClick={props.onClick}>
+            {props.value}
         </button>
     );
 }
@@ -128,6 +134,7 @@ class Board extends React.Component {
         return (
             <Square
                 value={this.props.squares[i]}
+                location={i}
                 onClick={() => { this.props.onClick(i); }}
             />
         );
@@ -216,46 +223,52 @@ class Game extends React.Component {
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
 
-        const moves = history.map((step, move) => {
-            const desc = move ?
-                `Go to move #${move}` :
-                'Go to game start';
-            return (
-                <li key={move}>
-                    <button onClick={() => { this.jumpTo(move); }}>
-                        {desc}
-                    </button>
-                </li>
-            );
-        });
+        let undo;
+        if (this.state.stepNumber) {
+            undo = 0;
+        } else if (this.state.stepNumber % 2 === 0) {
+            undo = this.state.stepNumber - 2;
+        } else {
+            undo = this.state.stepNumber + 1 - 2;
+        }
 
         let status;
         if (winner) {
-            status = `Winner: ${winner}`;
+            status = <div className="winner">Winner: {winner}</div>;
+            /* status = `Winner: ${winner}`; */
         } else {
-            status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
+            const tie = terminal(current.squares);
+            if (tie) status = <div className="tie">Tie</div>;
+            else status = `Turn : ${this.state.xIsNext ? 'X' : 'O'}`;
         }
 
         if (!this.state.xIsNext) {
             setTimeout(() => {
                 this.makeAiMove();
-            }, 0);
+            }, 500);
             return (
                 <div className="game">
+                    <div className="game-status">{status}</div>
                     <div className="game-board">
                         <Board
                             squares={current.squares}
                         />
                     </div>
                     <div className="game-info">
-                        <div>{status}</div>
-                        <ol>{moves}</ol>
+                        <button className="btn btn-success" disabled>Undo</button>
+                        <button
+                            className="btn btn-success"
+                            onClick={() => { this.jumpTo(0); }}
+                        >
+                            Restart
+                        </button>
                     </div>
                 </div>
             );
         } else {
             return (
                 <div className="game">
+                    <div className="game-status">{status}</div>
                     <div className="game-board">
                         <Board
                             squares={current.squares}
@@ -263,8 +276,18 @@ class Game extends React.Component {
                         />
                     </div>
                     <div className="game-info">
-                        <div>{status}</div>
-                        <ol>{moves}</ol>
+                        <button
+                            className="btn btn-success"
+                            onClick={() => { this.jumpTo(undo); }}
+                        >
+                            Undo
+                        </button>
+                        <button
+                            className="btn btn-success"
+                            onClick={() => { this.jumpTo(0); }}
+                        >
+                            Restart
+                        </button>
                     </div>
                 </div>
             );
