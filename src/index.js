@@ -251,14 +251,25 @@ class Game extends React.Component {
         const winner = calculateWinner(current.squares);
 
         let undo;
-        if ((this.state.stepNumber === 0 && this.props.choosedPlayer === "X")
-            || (this.state.stepNumber === 1 && this.props.choosedPlayer === "O")) {
-            undo = <button className="btn btn-success" disabled>Undo</button>;
+        if (this.props.isAImode) {
+            if ((this.state.stepNumber === 0 && this.props.choosedPlayer === "X")
+                || (this.state.stepNumber === 1 && this.props.choosedPlayer === "O")) {
+                undo = <button className="btn btn-success" disabled>Undo</button>;
+            } else {
+                const move = this.state.stepNumber - 2;
+                undo = <button
+                    className="btn btn-success"
+                    onClick={() => { this.jumpTo(move); }}>Undo</button>;
+            }
         } else {
-            const move = this.state.stepNumber - 2;
-            undo = <button
-                className="btn btn-success"
-                onClick={() => { this.jumpTo(move); }}>Undo</button>;
+            if (!this.state.stepNumber) {
+                undo = <button className="btn btn-success" disabled>Undo</button>;
+            } else {
+                const move = this.state.stepNumber - 1;
+                undo = <button
+                    className="btn btn-success"
+                    onClick={() => { this.jumpTo(move); }}>Undo</button>;
+            }
         }
 
         let status;
@@ -270,7 +281,7 @@ class Game extends React.Component {
             else status = `Turn : ${this.state.xIsNext ? 'X' : 'O'}`;
         }
 
-        if ((this.props.choosedPlayer === "O") === this.state.xIsNext) {
+        if (this.props.isAImode && ((this.props.choosedPlayer === "O") === this.state.xIsNext)) {
             setTimeout(() => {
                 this.makeAiMove();
             }, 500);
@@ -323,30 +334,43 @@ class GameOptions extends React.Component {
         super(props);
         this.state = {
             playerChoosed: false,
-            choosedPlayer: null
+            choosedPlayer: null,
+            modeSelected: false,
+            isAImode: null
         };
     }
 
-    handleClick(option) {
+    markPlayer(option) {
         this.setState({
             choosedPlayer: option,
             playerChoosed: true
         });
     }
 
+    markMode(option) {
+        this.setState({
+            isAImode: option === 1,
+            modeSelected: true
+        });
+    }
+
     render() {
-        if (this.state.playerChoosed) {
+        if (this.state.playerChoosed && this.state.modeSelected) {
             return (
                 <Game
                     choosedPlayer={this.state.choosedPlayer}
+                    isAImode={this.state.isAImode}
                 />
             );
         } else {
             return (
                 <div className="game-options">
                     <div className="prompt">Choose your player:</div>
-                    <button className="btn btn-primary option" onClick={() => { this.handleClick("X"); }}>X</button>
-                    <button className="btn btn-primary option" onClick={() => { this.handleClick("O"); }}>O</button>
+                    <button className="btn btn-primary btn-lg option" onClick={() => { this.markPlayer("X"); }}>X</button>
+                    <button className="btn btn-primary btn-lg option" onClick={() => { this.markPlayer("O"); }}>O</button>
+                    <div className="prompt">Choose mode:</div>
+                    <button className="btn btn-primary btn-lg option" onClick={() => { this.markMode(1); }}>1 Player</button>
+                    <button className="btn btn-primary btn-lg option" onClick={() => { this.markMode(2); }}>2 Player</button>
                 </div>
             );
         }

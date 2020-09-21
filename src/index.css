@@ -111,8 +111,5 @@ ol, ul {
 
 .game-options button {
     display: inline;
-}
-
-.game-options button:last-child {
     margin-left: 0.5rem;
 }
