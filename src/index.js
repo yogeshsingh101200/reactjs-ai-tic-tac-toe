@@ -122,22 +122,39 @@ const boardmap = [
 ];
 
 function Square(props) {
-    return (
-        <button className={`square ${boardmap[props.location]}`} onClick={props.onClick}>
-            {props.value}
-        </button>
-    );
+    if (props.onClick) {
+        return (
+            <button className={`square ${boardmap[props.location]}`} onClick={props.onClick}>
+                {props.value}
+            </button>
+        );
+    } else {
+        return (
+            <button className={`square ${boardmap[props.location]}`}>
+                {props.value}
+            </button>
+        );
+    }
 }
 
 class Board extends React.Component {
     renderSquare(i) {
-        return (
-            <Square
-                value={this.props.squares[i]}
-                location={i}
-                onClick={() => { this.props.onClick(i); }}
-            />
-        );
+        if (this.props.onClick) {
+            return (
+                <Square
+                    value={this.props.squares[i]}
+                    location={i}
+                    onClick={() => { this.props.onClick(i); }}
+                />
+            );
+        } else {
+            return (
+                <Square
+                    value={this.props.squares[i]}
+                    location={i}
+                />
+            );
+        }
     }
 
     render() {
@@ -224,18 +241,19 @@ class Game extends React.Component {
         const winner = calculateWinner(current.squares);
 
         let undo;
-        if (this.state.stepNumber) {
-            undo = 0;
-        } else if (this.state.stepNumber % 2 === 0) {
-            undo = this.state.stepNumber - 2;
+        if (!this.state.stepNumber) {
+            undo = <button className="btn btn-success" disabled>Undo</button>;
         } else {
-            undo = this.state.stepNumber + 1 - 2;
+            const move = this.state.stepNumber - 2;
+            undo = <button
+                className="btn btn-success"
+                onClick={() => { this.jumpTo(move); }}>Undo</button>;
+
         }
 
         let status;
         if (winner) {
             status = <div className="winner">Winner: {winner}</div>;
-            /* status = `Winner: ${winner}`; */
         } else {
             const tie = terminal(current.squares);
             if (tie) status = <div className="tie">Tie</div>;
@@ -276,12 +294,7 @@ class Game extends React.Component {
                         />
                     </div>
                     <div className="game-info">
-                        <button
-                            className="btn btn-success"
-                            onClick={() => { this.jumpTo(undo); }}
-                        >
-                            Undo
-                        </button>
+                        {undo}
                         <button
                             className="btn btn-success"
                             onClick={() => { this.jumpTo(0); }}
