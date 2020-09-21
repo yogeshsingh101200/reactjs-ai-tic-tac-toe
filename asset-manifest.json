@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/reactjs-ai-tic-tac-toe/static/css/main.b17d7c88.chunk.css",
+    "main.js": "/reactjs-ai-tic-tac-toe/static/js/main.4dfd8d35.chunk.js",
+    "main.js.map": "/reactjs-ai-tic-tac-toe/static/js/main.4dfd8d35.chunk.js.map",
+    "runtime-main.js": "/reactjs-ai-tic-tac-toe/static/js/runtime-main.e0e3bd74.js",
+    "runtime-main.js.map": "/reactjs-ai-tic-tac-toe/static/js/runtime-main.e0e3bd74.js.map",
+    "static/css/2.d9ad5f5c.chunk.css": "/reactjs-ai-tic-tac-toe/static/css/2.d9ad5f5c.chunk.css",
+    "static/js/2.b0c97d4c.chunk.js": "/reactjs-ai-tic-tac-toe/static/js/2.b0c97d4c.chunk.js",
+    "static/js/2.b0c97d4c.chunk.js.map": "/reactjs-ai-tic-tac-toe/static/js/2.b0c97d4c.chunk.js.map",
+    "index.html": "/reactjs-ai-tic-tac-toe/index.html",
+    "precache-manifest.cd6d8a8816274cb4f3f4594bf78364aa.js": "/reactjs-ai-tic-tac-toe/precache-manifest.cd6d8a8816274cb4f3f4594bf78364aa.js",
+    "service-worker.js": "/reactjs-ai-tic-tac-toe/service-worker.js",
+    "static/css/2.d9ad5f5c.chunk.css.map": "/reactjs-ai-tic-tac-toe/static/css/2.d9ad5f5c.chunk.css.map",
+    "static/css/main.b17d7c88.chunk.css.map": "/reactjs-ai-tic-tac-toe/static/css/main.b17d7c88.chunk.css.map",
+    "static/js/2.b0c97d4c.chunk.js.LICENSE.txt": "/reactjs-ai-tic-tac-toe/static/js/2.b0c97d4c.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e0e3bd74.js",
+    "static/css/2.d9ad5f5c.chunk.css",
+    "static/js/2.b0c97d4c.chunk.js",
+    "static/css/main.b17d7c88.chunk.css",
+    "static/js/main.4dfd8d35.chunk.js"
+  ]
+}
