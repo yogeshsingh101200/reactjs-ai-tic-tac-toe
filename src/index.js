@@ -79,16 +79,26 @@ function minvalue(squares, depth) {
 }
 
 function minimax(squares) {
-    // assuming ai is playing as O
-    // todo: remove assumption
-    let optimal_score = Infinity;
-    let optimal_state = null;
+    let optimal_score;
+    let optimal_state;
 
-    for (let state of actions(squares)) {
-        let val = maxvalue(result(squares, state), 0);
-        if (val < optimal_score) {
-            optimal_score = val;
-            optimal_state = state;
+    if (player(squares) === "X") {
+        optimal_score = -Infinity;
+        for (let state of actions(squares)) {
+            let val = minvalue(result(squares, state), 0);
+            if (val > optimal_score) {
+                optimal_score = val;
+                optimal_state = state;
+            }
+        }
+    } else {
+        optimal_score = Infinity;
+        for (let state of actions(squares)) {
+            let val = maxvalue(result(squares, state), 0);
+            if (val < optimal_score) {
+                optimal_score = val;
+                optimal_state = state;
+            }
         }
     }
     return optimal_state;
@@ -241,14 +251,14 @@ class Game extends React.Component {
         const winner = calculateWinner(current.squares);
 
         let undo;
-        if (!this.state.stepNumber) {
+        if ((this.state.stepNumber === 0 && this.props.choosedPlayer === "X")
+            || (this.state.stepNumber === 1 && this.props.choosedPlayer === "O")) {
             undo = <button className="btn btn-success" disabled>Undo</button>;
         } else {
             const move = this.state.stepNumber - 2;
             undo = <button
                 className="btn btn-success"
                 onClick={() => { this.jumpTo(move); }}>Undo</button>;
-
         }
 
         let status;
@@ -260,7 +270,7 @@ class Game extends React.Component {
             else status = `Turn : ${this.state.xIsNext ? 'X' : 'O'}`;
         }
 
-        if (!this.state.xIsNext) {
+        if ((this.props.choosedPlayer === "O") === this.state.xIsNext) {
             setTimeout(() => {
                 this.makeAiMove();
             }, 500);
@@ -308,9 +318,44 @@ class Game extends React.Component {
     }
 }
 
+class GameOptions extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            playerChoosed: false,
+            choosedPlayer: null
+        };
+    }
+
+    handleClick(option) {
+        this.setState({
+            choosedPlayer: option,
+            playerChoosed: true
+        });
+    }
+
+    render() {
+        if (this.state.playerChoosed) {
+            return (
+                <Game
+                    choosedPlayer={this.state.choosedPlayer}
+                />
+            );
+        } else {
+            return (
+                <div className="game-options">
+                    <div className="prompt">Choose your player:</div>
+                    <button className="btn btn-primary option" onClick={() => { this.handleClick("X"); }}>X</button>
+                    <button className="btn btn-primary option" onClick={() => { this.handleClick("O"); }}>O</button>
+                </div>
+            );
+        }
+    }
+}
+
 // ========================================
 
 ReactDOM.render(
-    <Game />,
+    <GameOptions />,
     document.getElementById('root')
 );
