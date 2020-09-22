@@ -89,7 +89,6 @@ ol, ul {
 }
 
 .game-status, .prompt {
-    text-align: center;
     color: #bdbdbd!important;
     font-size: 3rem;
     font-weight: bold;
@@ -112,4 +111,8 @@ ol, ul {
 .game-options button {
     display: inline;
     margin-left: 0.5rem;
+}
+
+.prompt {
+    margin-bottom: 1rem;
 }
