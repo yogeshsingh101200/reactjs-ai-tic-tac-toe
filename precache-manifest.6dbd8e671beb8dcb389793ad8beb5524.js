@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1cfca089fcf55ebdf3e32228110c4940",
+    "revision": "71915a3db7e1f4cef244176de54b6549",
     "url": "/reactjs-ai-tic-tac-toe/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/reactjs-ai-tic-tac-toe/static/css/2.d9ad5f5c.chunk.css"
   },
   {
-    "revision": "ab954b26dceaa13b12e9",
-    "url": "/reactjs-ai-tic-tac-toe/static/css/main.b17d7c88.chunk.css"
+    "revision": "26556eb3d605c716d56b",
+    "url": "/reactjs-ai-tic-tac-toe/static/css/main.a596d3a2.chunk.css"
   },
   {
     "revision": "62d7483e3ec39c6c327d",
@@ -20,7 +20,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/reactjs-ai-tic-tac-toe/static/js/2.b0c97d4c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "ab954b26dceaa13b12e9",
+    "revision": "26556eb3d605c716d56b",
     "url": "/reactjs-ai-tic-tac-toe/static/js/main.4dfd8d35.chunk.js"
   },
   {
