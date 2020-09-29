@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "66bbdd09f56e79e8d1681852aecfd0de",
+    "revision": "54fbf8b48b623ca1dc399e761ac6fec8",
     "url": "/reactjs-ai-tic-tac-toe/index.html"
   },
   {
